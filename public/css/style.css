@@ -295,7 +295,7 @@ html:not(.js) .nav__links{display:flex;flex-wrap:wrap;gap:12px 18px}
 .tcard p{color:var(--mute);max-width:42ch}
 .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
 .tags span{padding:7px 12px;border:1px solid var(--line);border-radius:var(--r-pill);color:var(--mute);font:500 .68rem/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase}
-@media(min-width:900px) and (prefers-reduced-motion:no-preference){
+@media(min-width:900px){
   html.anim .tracks{height:100svh;overflow:clip;display:flex;flex-direction:column;justify-content:center;padding-block:calc(var(--nav-h) + 40px) 24px}
   html.anim .tracks__head{margin-bottom:clamp(20px,3.5vh,44px)}
   html.anim .tracks__head .label{margin-bottom:clamp(14px,2.4vh,28px)}
@@ -486,11 +486,6 @@ main{position:relative;z-index:1;background:var(--ink)}
 }
 
 /* ---------- Reduced motion: kill loops and scrub, keep content ---------- */
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
-  .preloader{animation:preFail .01s linear 0s forwards!important}
-  .grain{display:none}
-}
 
 /* real-details additions: registration countdown label, prize asterisk + footnote */
 .cdwrap{display:grid;gap:14px}

@@ -7,7 +7,7 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const rupee = (n) => '₹' + Number(n).toLocaleString('en-IN');
 const initials = (n) => String(n || '?').trim().split(/\s+/).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
-const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reduced = false;
 const G = () => (typeof gsap !== 'undefined' && !reduced ? gsap : null);
  
 const STEPS = ['profile', 'team', 'pay', 'done'];

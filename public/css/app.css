@@ -131,5 +131,5 @@ label.f.has-err .ctl{border-color:var(--signal)}
 .poll{display:inline-flex;align-items:center;gap:8px;color:var(--mute)}
 .poll i{width:6px;height:6px;border-radius:50%;background:var(--ok);animation:pulse 2s ease-in-out infinite}
 :focus-visible{outline:2px solid var(--acid);outline-offset:2px}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
 a.btn{text-decoration:none}

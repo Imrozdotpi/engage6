@@ -52,7 +52,7 @@ const CONFIG = {
   const mq = (q) => window.matchMedia(q).matches;
   const isDesktop = () => mq('(min-width: 900px)');
   const fine = () => mq('(hover:hover) and (pointer:fine)');
-  const reduced = () => mq('(prefers-reduced-motion: reduce)');
+  const reduced = () => false;   // always play full animations, even if the OS says 'reduce motion'
   const fmt = (n) => Number(n).toLocaleString('en-IN');
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
   const safe = (name, fn) => { try { return fn(); } catch (e) { console.error('[Engage] ' + name + ' failed:', e); } };
@@ -551,8 +551,8 @@ const CONFIG = {
     const mm = gsap.matchMedia();
     mm.add({
       desktop: '(min-width: 900px)',
-      motion: '(prefers-reduced-motion: no-preference)',
-      reduce: '(prefers-reduced-motion: reduce)'
+      motion: 'all',
+      reduce: 'not all'
     }, (ctx) => {
       const { desktop, motion, reduce } = ctx.conditions;
       const splits = [];

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0A0A0B">
+  <meta name="robots" content="noindex">
+  <title>Dashboard | Engage 6.0</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+ 
+  <header class="topbar">
+    <a class="brand" href="/">ENGAGE <span>6.0</span></a>
+    <div class="topbar__right">
+      <div class="userchip" id="userChip" hidden></div>
+      <button class="btn btn--ghost btn--sm" id="signOut" type="button">Sign out</button>
+    </div>
+  </header>
+ 
+  <main class="shell">
+    <aside class="rail" aria-label="Progress">
+      <ol class="stepper" id="stepper">
+        <li data-step="profile"><span class="node">1</span><span class="lbl">Profile</span></li>
+        <li data-step="team"><span class="node">2</span><span class="lbl">Team</span></li>
+        <li data-step="pay"><span class="node">3</span><span class="lbl">Payment</span></li>
+        <li data-step="done"><span class="node">4</span><span class="lbl">You're in</span></li>
+      </ol>
+      <p class="rail__note mono">&#8377;<span id="feeNote">250</span> per head. Team of 2 = &#8377;500.</p>
+    </aside>
+ 
+    <section class="stage" id="stage" aria-live="polite">
+      <div class="skeleton"><i></i><i></i><i></i></div>
+    </section>
+  </main>
+ 
+  <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+ 
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

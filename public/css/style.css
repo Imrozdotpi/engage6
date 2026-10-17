@@ -489,7 +489,7 @@ main{position:relative;z-index:1;background:var(--ink)}
 
 /* real-details additions: registration countdown label, prize asterisk + footnote */
 .cdwrap{display:grid;gap:14px}
-.cd-label{margin:0;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--bone)}
+.cd-label{margin:0;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
 .cd-label small{color:var(--mute);font-size:inherit}
 .ast{color:var(--acid);text-decoration:none;font:800 .5em/1 var(--f-display);vertical-align:top;margin-left:.08em;position:relative;top:.1em}
 .ast-link{color:var(--bone);text-decoration:underline;text-underline-offset:3px}

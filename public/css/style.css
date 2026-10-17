@@ -146,6 +146,13 @@ html:not(.js) .preloader{display:none}
   background:rgba(10,10,11,.6);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
 }
 .nav__brand{display:flex;align-items:center;gap:10px;text-decoration:none;font:800 1.02rem/1 var(--f-display);letter-spacing:-.01em;white-space:nowrap}
+.nav__left{display:flex;align-items:center;gap:12px;min-width:0}
+.nav__logo{display:flex;align-items:center;flex:0 0 auto;line-height:0}
+.nav__logo img{display:block;height:28px;width:auto;max-width:none}
+.nav__sep{width:1px;height:22px;background:var(--line);flex:0 0 auto}
+@media(max-width:520px){.nav__live,.nav__brand .live-dot{display:none}}
+@media(max-width:380px){.nav__left{gap:9px}.nav__logo img{height:24px}.nav__brand{font-size:.9rem}}
+@media(min-width:900px){.nav__logo img{height:34px}.nav__left{gap:16px}.nav__sep{height:26px}}
 .nav__live{font:500 .64rem/1 var(--f-mono);letter-spacing:.1em;color:var(--signal);font-style:normal}
 .nav__links{display:none;gap:clamp(18px,2.6vw,34px);font:500 var(--fs-mono)/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase}
 .nav__cta{display:none}
@@ -489,7 +496,7 @@ main{position:relative;z-index:1;background:var(--ink)}
 
 /* real-details additions: registration countdown label, prize asterisk + footnote */
 .cdwrap{display:grid;gap:14px}
-.cd-label{margin:0;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+.cd-label{margin:0;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
 .cd-label small{color:var(--mute);font-size:inherit}
 .ast{color:var(--acid);text-decoration:none;font:800 .5em/1 var(--f-display);vertical-align:top;margin-left:.08em;position:relative;top:.1em}
 .ast-link{color:var(--bone);text-decoration:underline;text-underline-offset:3px}

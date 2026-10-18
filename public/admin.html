@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><link rel="icon" href="data:,">
+<title>Engage 6.0 Admin</title>
+<style>
+:root{--ink:#0A0A0B;--ink2:#121214;--ink3:#1A1A1D;--line:#26262A;--bone:#F1EEE4;--mute:#8B8B93;--acid:#C8FF2E;--red:#FF4D2E;--ok:#5BE38A;--warn:#FFB020}
+*{box-sizing:border-box;margin:0}body{background:var(--ink);color:var(--bone);font:15px/1.5 system-ui,Segoe UI,Roboto,sans-serif;min-height:100vh}
+button,input,select{font:inherit;color:inherit}a{color:var(--acid)}
+.top{position:sticky;top:0;z-index:5;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:12px 20px;background:rgba(10,10,11,.92);border-bottom:1px solid var(--line)}
+.brand{font-weight:800;letter-spacing:-.02em}.brand b{color:var(--acid)}.who{color:var(--mute);font-size:.85rem}
+.btn{background:var(--ink3);border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer}.btn:hover{border-color:var(--acid)}
+.btn.p{background:var(--acid);color:#0A0A0B;border-color:var(--acid);font-weight:700}.btn.d{color:var(--red);border-color:#4a2118}.btn.s{padding:3px 10px;font-size:.8rem}.btn:disabled{opacity:.5;cursor:wait}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;padding:12px 20px;border-bottom:1px solid var(--line)}.tabs .btn.on{background:var(--acid);color:#0A0A0B;border-color:var(--acid)}
+main{padding:20px;max-width:1500px;margin:auto}
+.login{max-width:380px;margin:12vh auto;padding:28px;background:var(--ink2);border:1px solid var(--line);border-radius:16px}
+.login h1{font-size:1.5rem;margin-bottom:16px}.login label{display:block;margin:12px 0 4px;color:var(--mute);font-size:.8rem}
+input,select{width:100%;background:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px}input:focus{outline:none;border-color:var(--acid)}
+.err{color:var(--red);min-height:1.4em;margin-top:10px;font-size:.9rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}.card{background:var(--ink2);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card b{display:block;font-size:1.7rem;color:var(--acid)}.card span{color:var(--mute);font-size:.8rem}
+.bar{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}.bar input{flex:1;min-width:200px}.bar select{width:auto}
+.wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px}table{border-collapse:collapse;width:100%;min-width:760px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top;font-size:.88rem}th{background:var(--ink2);color:var(--mute);font-weight:600;white-space:nowrap}
+tr:last-child td{border-bottom:0}.mu{color:var(--mute);font-size:.8rem}.mono{font-family:ui-monospace,Consolas,monospace;font-size:.75rem;word-break:break-all}
+.tag{display:inline-block;padding:1px 9px;border-radius:99px;font-size:.75rem;border:1px solid var(--line)}.tag.paid{color:var(--ok);border-color:var(--ok)}.tag.payment_pending,.tag.created,.tag.pending{color:var(--warn);border-color:var(--warn)}.tag.review,.tag.cancelled,.tag.declined{color:var(--red);border-color:var(--red)}
+.act{display:flex;gap:6px;flex-wrap:wrap}.mem{display:flex;gap:6px;align-items:center;margin-bottom:3px}.x{background:none;border:0;color:var(--red);cursor:pointer;font-size:1rem;line-height:1}
+.note{padding:12px 16px;background:var(--ink2);border:1px solid var(--line);border-radius:12px;margin:12px 0;color:var(--mute)}.note.w{border-color:var(--warn);color:var(--warn)}
+.exp{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}.exp .card{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink3);border:1px solid var(--acid);padding:10px 18px;border-radius:12px;display:none;z-index:9;max-width:90vw}#toast.e{border-color:var(--red);color:var(--red)}
+</style></head><body>
+<div id="app"></div><div id="toast"></div>
+<script>
+(function(){'use strict';
+var $=function(s){return document.querySelector(s)};
+var esc=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+var rupee=function(n){return '\u20B9'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:2})};
+var fmt=function(d){var x=d?new Date(d):null;return x&&!isNaN(x)?x.toLocaleString('en-IN',{day:'2-digit',month:'short',year:'2-digit',hour:'2-digit',minute:'2-digit'}):'-'};
+var S={token:null,email:'',d:null,tab:'overview',q:'',f:''};
+var store={get:function(){try{return JSON.parse(sessionStorage.getItem('e6admin')||'null')}catch(e){return null}},set:function(v){try{v?sessionStorage.setItem('e6admin',JSON.stringify(v)):sessionStorage.removeItem('e6admin')}catch(e){}}};
+var tt;function toast(m,err){var t=$('#toast');t.textContent=m;t.className=err?'e':'';t.style.display='block';clearTimeout(tt);tt=setTimeout(function(){t.style.display='none'},err?6000:3000)}
+
+async function api(path,opt){opt=opt||{};
+  var r=await fetch('/api/admin'+path,{method:opt.method||'GET',headers:{'Content-Type':'application/json',Authorization:'Bearer '+S.token},body:opt.body?JSON.stringify(opt.body):undefined});
+  var j={};try{j=await r.json()}catch(e){}
+  if(r.status===401&&path!=='/login'){logout('Session expired. Please sign in again.');throw new Error('Signed out')}
+  if(!r.ok)throw new Error(j.message||('Request failed ('+r.status+')'));return j}
+
+function logout(msg){S.token=null;S.d=null;store.set(null);showLogin(msg||'')}
+function showLogin(msg){
+  $('#app').innerHTML='<form class="login" id="lf" autocomplete="on"><h1>Engage <b style="color:var(--acid)">6.0</b> Admin</h1><label for="em">Email</label><input id="em" type="email" autocomplete="username" required><label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password" required><div class="err" id="le">'+esc(msg)+'</div><button class="btn p" style="width:100%;margin-top:8px" id="lb">Sign in</button></form>';
+  $('#lf').addEventListener('submit',async function(e){e.preventDefault();var b=$('#lb');b.disabled=true;$('#le').textContent='';
+    try{var r=await api('/login',{method:'POST',body:{email:$('#em').value,password:$('#pw').value}});S.token=r.token;S.email=r.email;store.set({token:r.token,email:r.email});await boot()}
+    catch(x){$('#le').textContent=x.message;b.disabled=false}})}
+
+async function load(){S.d=await api('/data');var d=S.d;d.pById={};d.tById={};d.mByTeam={};d.mByUser={};d.paid={};
+  d.profiles.forEach(function(p){d.pById[p.id]=p});d.teams.forEach(function(t){d.tById[t.id]=t});
+  d.members.forEach(function(m){(d.mByTeam[m.team_id]=d.mByTeam[m.team_id]||[]).push(m);d.mByUser[m.user_id]=m});
+  d.payments.forEach(function(p){if(p.status==='paid')d.paid[p.team_id]=(d.paid[p.team_id]||0)+p.amount_rupees})}
+async function boot(){try{await load();shell()}catch(e){if(e.message!=='Signed out')showLogin(e.message)}}
+
+var TABS=[['overview','Overview'],['people','People'],['teams','Teams'],['payments','Payments'],['invites','Invites'],['signups','All sign-ups'],['export','Export']];
+function shell(){
+  $('#app').innerHTML='<div class="top"><div class="brand">ENGAGE <b>6.0</b> ADMIN</div><div><span class="who">'+esc(S.email)+'</span> <button class="btn s" id="rf">Refresh</button> <button class="btn s" id="lo">Sign out</button></div></div><div class="tabs">'+TABS.map(function(t){return '<button class="btn'+(S.tab===t[0]?' on':'')+'" data-tab="'+t[0]+'">'+t[1]+'</button>'}).join('')+'</div><main id="view"></main>';
+  $('#rf').onclick=function(){reload(true)};$('#lo').onclick=function(){logout()};
+  document.querySelectorAll('[data-tab]').forEach(function(b){b.onclick=function(){S.tab=b.dataset.tab;S.q='';S.f='';shell()}});
+  $('#view').addEventListener('click',onClick);render()}
+async function reload(say){try{await load();shell();if(say)toast('Refreshed')}catch(e){if(e.message!=='Signed out')toast(e.message,true)}}
+
+var tag=function(s){return '<span class="tag '+esc(s)+'">'+esc(String(s).replace('_',' '))+'</span>'};
+var nm=function(id){var p=S.d.pById[id];return p?esc(p.full_name):'<span class="mu">unknown</span>'};
+function table(head,rows){return '<div class="wrap"><table><thead><tr>'+head.map(function(h){return '<th>'+h+'</th>'}).join('')+'</tr></thead><tbody>'+(rows.length?rows.join(''):'<tr><td colspan="'+head.length+'" class="mu">Nothing here yet.</td></tr>')+'</tbody></table></div>'}
+function bar(filters){return '<div class="bar"><input id="sq" placeholder="Search..." value="'+esc(S.q)+'">'+(filters?'<select id="sf">'+filters.map(function(f){return '<option value="'+f[0]+'"'+(S.f===f[0]?' selected':'')+'>'+f[1]+'</option>'}).join('')+'</select>':'')+'</div><div id="tb"></div>'}
+function hook(draw){var sq=$('#sq'),sf=$('#sf');sq.oninput=function(){S.q=sq.value;draw()};if(sf)sf.onchange=function(){S.f=sf.value;draw()};draw()}
+function pick(items){var q=S.q.trim().toLowerCase();return items.filter(function(i){return(!S.f||i.f===S.f)&&(!q||i.t.toLowerCase().indexOf(q)>-1)}).map(function(i){return i.h})}
+
+function render(){var d=S.d,v=$('#view'),t=S.tab;
+  if(t==='overview'){var s=d.stats;
+    var c=[['Sign-ups (Google)',s.signups],['Profiles completed',s.profiles],['Teams',s.teams],['Forming',s.forming],['Awaiting payment',s.pending],['Paid teams',s.paidTeams],['Paid participants',s.paidPeople],['Revenue',rupee(s.revenue)],['Pending invites',s.pendingInvites]];
+    v.innerHTML=(d.warning?'<div class="note w">'+esc(d.warning)+'</div>':'')+'<div class="cards">'+c.map(function(x){return '<div class="card"><b>'+esc(x[1])+'</b><span>'+x[0]+'</span></div>'}).join('')+'</div>'+
+      (s.review?'<div class="note w">'+s.review+' payment(s) need review (duplicate or amount mismatch). Check the Payments tab and refund in Razorpay if needed.</div>':'')+
+      '<div class="note">Fee: '+rupee(d.limits.fee)+' per person. Team size '+d.limits.min+'-'+d.limits.max+'. Amounts here are in rupees.</div>'}
+  else if(t==='people'){v.innerHTML=bar([['','All'],['noteam','No team'],['team','In a team'],['paid','Paid']]);hook(function(){
+    $('#tb').innerHTML=table(['Name','Roll / College','Course','Phone','Team','Joined',''],pick(d.profiles.map(function(p){var m=d.mByUser[p.id],tm=m&&d.tById[m.team_id];
+      return{t:[p.full_name,p.email,p.roll_no,p.college,p.phone,tm&&tm.name].join(' '),f:tm?(tm.status==='paid'?'paid':'team'):'noteam',h:'<tr><td>'+esc(p.full_name)+'<div class="mu">'+esc(p.email)+'</div></td><td>'+esc(p.roll_no)+'<div class="mu">'+esc(p.college)+'</div></td><td>'+esc(p.course)+'<div class="mu">Year '+esc(p.year_of_study)+'</div></td><td>'+esc(p.phone)+'</td><td>'+(tm?esc(tm.name)+' <span class="mu">('+esc(m.role)+')</span> '+tag(tm.status):'<span class="mu">no team</span>')+'</td><td class="mu">'+fmt(p.created_at)+'</td><td><button class="btn s d" data-a="delperson" data-id="'+esc(p.id)+'">Delete</button></td></tr>'}})))})}
+  else if(t==='teams'){v.innerHTML=bar([['','All'],['forming','Forming'],['payment_pending','Awaiting payment'],['paid','Paid']]);hook(function(){
+    $('#tb').innerHTML=table(['Team','Status','Members','Paid','Created',''],pick(d.teams.map(function(tm){var ms=d.mByTeam[tm.id]||[];
+      return{t:tm.name+' '+ms.map(function(m){var p=d.pById[m.user_id];return p?p.full_name+' '+p.email:''}).join(' '),f:tm.status,h:'<tr><td><b>'+esc(tm.name)+'</b></td><td>'+tag(tm.status)+'</td><td>'+ms.map(function(m){var p=d.pById[m.user_id];return '<div class="mem"><span>'+esc(p?p.full_name:'?')+' <span class="mu">'+esc(m.role)+(p?' \u00B7 '+esc(p.email):'')+'</span></span><button class="x" title="Remove from team" data-a="rm" data-id="'+esc(tm.id)+'" data-u="'+esc(m.user_id)+'">\u00D7</button></div>'}).join('')+'</td><td>'+(d.paid[tm.id]?rupee(d.paid[tm.id]):'-')+'</td><td class="mu">'+fmt(tm.created_at)+'</td><td><div class="act">'+(tm.status!=='paid'?'<button class="btn s" data-a="paid" data-id="'+esc(tm.id)+'">Mark paid</button>':'')+(tm.status!=='forming'?'<button class="btn s" data-a="reset" data-id="'+esc(tm.id)+'">Reset to forming</button>':'')+'<button class="btn s d" data-a="delteam" data-id="'+esc(tm.id)+'">Delete team</button></div></td></tr>'}})))})}
+  else if(t==='payments'){v.innerHTML=bar([['','All'],['paid','Paid'],['created','Started'],['review','Needs review'],['cancelled','Cancelled']]);hook(function(){
+    $('#tb').innerHTML=table(['Team','Amount','People','Status','Order ID','Payment ID','Created','Paid at'],pick(d.payments.map(function(p){var tm=d.tById[p.team_id];
+      return{t:[tm&&tm.name,p.razorpay_order_id,p.razorpay_payment_id].join(' '),f:p.status,h:'<tr><td>'+esc(tm?tm.name:'(deleted)')+'</td><td><b>'+rupee(p.amount_rupees)+'</b></td><td>'+esc(p.members_count)+'</td><td>'+tag(p.status)+'</td><td class="mono">'+esc(p.razorpay_order_id)+'</td><td class="mono">'+esc(p.razorpay_payment_id||'-')+'</td><td class="mu">'+fmt(p.created_at)+'</td><td class="mu">'+fmt(p.paid_at)+'</td></tr>'}})))})}
+  else if(t==='invites'){v.innerHTML=bar([['','All'],['pending','Pending'],['accepted','Accepted'],['declined','Declined'],['cancelled','Cancelled']]);hook(function(){
+    $('#tb').innerHTML=table(['Team','Invited person','Invited by','Status','Sent',''],pick(d.invites.map(function(i){var tm=d.tById[i.team_id],p=d.pById[i.invitee_id];
+      return{t:[tm&&tm.name,p&&p.full_name,p&&p.email].join(' '),f:i.status,h:'<tr><td>'+esc(tm?tm.name:'?')+'</td><td>'+nm(i.invitee_id)+'<div class="mu">'+esc(p?p.email:'')+'</div></td><td>'+nm(i.invited_by)+'</td><td>'+tag(i.status)+'</td><td class="mu">'+fmt(i.created_at)+'</td><td><button class="btn s d" data-a="delinv" data-id="'+esc(i.id)+'">Delete</button></td></tr>'}})))})}
+  else if(t==='signups'){v.innerHTML='<div class="note">Everyone who ever signed in with Google, including people who never finished their profile.</div>'+bar([['','All'],['noprofile','No profile yet'],['profile','Profile done']]);hook(function(){
+    $('#tb').innerHTML=table(['Email','Google name','Profile','Signed up','Last sign-in',''],pick(d.users.map(function(u){var has=!!d.pById[u.id];
+      return{t:u.email+' '+u.name,f:has?'profile':'noprofile',h:'<tr><td>'+esc(u.email)+'</td><td>'+esc(u.name)+'</td><td>'+(has?'<span class="tag paid">done</span>':'<span class="tag pending">missing</span>')+'</td><td class="mu">'+fmt(u.created_at)+'</td><td class="mu">'+fmt(u.last_sign_in_at)+'</td><td><button class="btn s d" data-a="delperson" data-id="'+esc(u.id)+'">Delete login</button></td></tr>'}})))})}
+  else if(t==='export'){var E=[['full','Full participant report','Everyone with a profile: details, team, status, amount paid.'],['paid','Paid participants only','Only people in teams that have paid. Use this for the event list.'],['teams','Teams','One row per team with members and status.'],['payments','Payments (in rupees)','Every payment attempt with order and payment IDs.'],['invites','Invites','All invites and their status.'],['signups','All sign-ups','Every Google sign-in, with or without profile.'],['json','Full backup (JSON)','Everything in one file.']];
+    v.innerHTML='<div class="exp">'+E.map(function(e){return '<div class="card"><b style="font-size:1.05rem;color:var(--bone)">'+e[1]+'</b><span>'+e[2]+'</span><button class="btn p" data-a="exp" data-id="'+e[0]+'">Download</button></div>'}).join('')+'<div class="card"><b style="font-size:1.05rem;color:var(--bone)">Everything</b><span>Downloads all the CSV files one after another. Allow multiple downloads if the browser asks.</span><button class="btn p" data-a="exp" data-id="all">Download all</button></div></div>'}}
+
+/* ---------------- exports ---------------- */
+function cell(v){var s=String(v==null?'':v);if(/^[=+\-@]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'}
+function csv(head,rows){return '\uFEFF'+[head.map(cell).join(',')].concat(rows.map(function(r){return r.map(cell).join(',')})).join('\r\n')}
+function save(name,text,type){var b=new Blob([text],{type:type||'text/csv;charset=utf-8'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},3000)}
+function build(k){var d=S.d,stamp=new Date().toISOString().slice(0,10);
+  var person=function(p){var m=d.mByUser[p.id],tm=m&&d.tById[m.team_id];return[p.full_name,p.email,p.roll_no,p.college,p.course,p.year_of_study,p.phone,p.github_url,p.linkedin_url,tm?tm.name:'',m?m.role:'',tm?tm.status:'no team',tm?(d.paid[tm.id]||0):0,tm&&tm.paid_at?fmt(tm.paid_at):'',fmt(p.created_at)]};
+  var PH=['name','email','roll_no','college','course','year','phone','github','linkedin','team','role','team_status','team_paid_rupees','team_paid_at','profile_created'];
+  if(k==='full')return['engage6-all-participants-'+stamp+'.csv',csv(PH,d.profiles.map(person))];
+  if(k==='paid')return['engage6-paid-participants-'+stamp+'.csv',csv(PH,d.profiles.filter(function(p){var m=d.mByUser[p.id],tm=m&&d.tById[m.team_id];return tm&&tm.status==='paid'}).map(person))];
+  if(k==='teams')return['engage6-teams-'+stamp+'.csv',csv(['team','status','members','member_emails','member_phones','paid_rupees','created','paid_at'],d.teams.map(function(t){var ms=(d.mByTeam[t.id]||[]).map(function(m){return d.pById[m.user_id]}).filter(Boolean);return[t.name,t.status,ms.map(function(p){return p.full_name}).join(' | '),ms.map(function(p){return p.email}).join(' | '),ms.map(function(p){return p.phone}).join(' | '),d.paid[t.id]||0,fmt(t.created_at),fmt(t.paid_at)]}))];
+  if(k==='payments')return['engage6-payments-'+stamp+'.csv',csv(['team','amount_rupees','people','status','order_id','payment_id','created','paid_at'],d.payments.map(function(p){var t=d.tById[p.team_id];return[t?t.name:'(deleted)',p.amount_rupees,p.members_count,p.status,p.razorpay_order_id,p.razorpay_payment_id,fmt(p.created_at),fmt(p.paid_at)]}))];
+  if(k==='invites')return['engage6-invites-'+stamp+'.csv',csv(['team','invitee','invitee_email','invited_by','status','sent'],d.invites.map(function(i){var t=d.tById[i.team_id],a=d.pById[i.invitee_id],b=d.pById[i.invited_by];return[t?t.name:'',a?a.full_name:'',a?a.email:'',b?b.full_name:'',i.status,fmt(i.created_at)]}))];
+  if(k==='signups')return['engage6-signups-'+stamp+'.csv',csv(['email','google_name','has_profile','signed_up','last_sign_in'],d.users.map(function(u){return[u.email,u.name,d.pById[u.id]?'yes':'no',fmt(u.created_at),fmt(u.last_sign_in_at)]}))];
+  return['engage6-backup-'+stamp+'.json',JSON.stringify({profiles:d.profiles,teams:d.teams,members:d.members,invites:d.invites,payments:d.payments,signups:d.users},null,2),'application/json'];}
+
+/* ---------------- actions ---------------- */
+async function onClick(e){var b=e.target.closest('[data-a]');if(!b)return;var a=b.dataset.a,id=b.dataset.id,d=S.d;
+  try{
+    if(a==='exp'){var ks=id==='all'?['full','paid','teams','payments','invites','signups']:[id];ks.forEach(function(k,i){setTimeout(function(){var f=build(k);save(f[0],f[1],f[2])},i*500)});return}
+    var run=async function(path,method,msg){b.disabled=true;try{await api(path,{method:method});toast(msg);await reload()}finally{b.disabled=false}};
+    if(a==='delteam'){var t=d.tById[id];if(prompt('Permanently delete team "'+t.name+'", its members\' team links, invites AND its payment records?\nType DELETE to confirm.')!=='DELETE')return;await run('/teams/'+id,'DELETE','Team deleted')}
+    else if(a==='rm'){var p=d.pById[b.dataset.u];if(!confirm('Remove '+(p?p.full_name:'this person')+' from the team? If they are the leader, the next member becomes leader.'))return;await run('/teams/'+id+'/members/'+b.dataset.u,'DELETE','Removed from team')}
+    else if(a==='paid'){var t2=d.tById[id];if(!confirm('Mark "'+t2.name+'" as PAID manually (cash/offline)? This records a manual payment of '+rupee((d.mByTeam[id]||[]).length*d.limits.fee)+'.'))return;await run('/teams/'+id+'/mark-paid','POST','Marked paid')}
+    else if(a==='reset'){var t3=d.tById[id];if(!confirm('Reset "'+t3.name+'" to forming? Open orders are cancelled; paid payments are kept but flagged "review" (refund them in Razorpay if needed).'))return;await run('/teams/'+id+'/reset','POST','Team reset')}
+    else if(a==='delinv'){if(!confirm('Delete this invite?'))return;await run('/invites/'+id,'DELETE','Invite deleted')}
+    else if(a==='delperson'){var pp=d.pById[id],u=d.users.filter(function(x){return x.id===id})[0],who=pp?pp.full_name:(u?u.email:'this person');
+      if(prompt('Permanently delete '+who+' (login + profile + team membership)?\nIf they are the only member of a team, that team and its payment records are deleted too.\nType DELETE to confirm.')!=='DELETE')return;await run('/people/'+id,'DELETE','Person deleted')}
+  }catch(x){if(x.message!=='Signed out')toast(x.message,true)}}
+
+var saved=store.get();if(saved&&saved.token){S.token=saved.token;S.email=saved.email;boot()}else showLogin('');
+})();
+</script></body></html>

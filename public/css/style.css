@@ -503,3 +503,91 @@ main{position:relative;z-index:1;background:var(--ink)}
 .prize-note{margin-top:clamp(20px,3vw,32px);display:grid;gap:10px;max-width:92ch;font-size:.78rem;line-height:1.65;color:var(--mute)}
 .prize-note p{margin:0}.prize-note b{color:var(--bone);font-weight:500}.prize-note .ast{font-size:1em;top:0;margin:0}
 .live-count[hidden]{display:none!important}
+
+/* ---------- Nav WhatsApp button ---------- */
+.nav__wa{
+  display:none;align-items:center;justify-content:center;flex:none;
+  width:44px;height:44px;border-radius:50%;
+  border:1px solid var(--line);color:var(--bone);text-decoration:none;
+  transition:border-color .3s var(--ease-out),color .3s var(--ease-out),background .3s var(--ease-out);
+}
+.nav__wa svg{width:20px;height:20px;flex:none}
+.nav__wa:hover{border-color:#25d366;color:#25d366;background:rgba(37,211,102,.08)}
+@media(min-width:900px){.nav__wa{display:inline-flex}}
+
+/* mobile menu whatsapp link */
+.menu__wa{
+  display:flex;align-items:center;gap:12px;align-self:flex-start;
+  padding:14px 22px;margin-top:8px;
+  border:1px solid var(--line);border-radius:var(--r-pill);
+  text-decoration:none;color:var(--bone);
+  font:600 .82rem/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;
+  transition:border-color .3s,color .3s,background .3s;
+}
+.menu__wa svg{flex:none;color:#25d366}
+.menu__wa:hover{border-color:#25d366;color:#25d366;background:rgba(37,211,102,.06)}
+
+/* ---------- Organising Team Leads ---------- */
+.org-leads__head{margin-bottom:clamp(28px,5vw,56px)}
+.org-leads__head .label{margin-bottom:clamp(14px,2vw,28px)}
+.org-leads__grid{
+  display:grid;gap:20px;
+  grid-template-columns:minmax(0,1fr);
+}
+.lead-card{
+  position:relative;isolation:isolate;
+  display:flex;flex-direction:column;
+  min-height:280px;
+  border:1px solid var(--line);border-radius:var(--r-md);
+  background:var(--ink-2);overflow:hidden;
+  transition:border-color .4s var(--ease-out),translate .5s var(--ease-out);
+}
+.lead-card:hover{border-color:var(--acid);translate:0 -8px}
+.lead-card__accent{
+  position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--acid),rgba(200,255,46,.2));
+  opacity:0;transition:opacity .4s;
+}
+.lead-card:hover .lead-card__accent{opacity:1}
+.lead-card__body{
+  display:flex;flex-direction:column;gap:16px;
+  padding:clamp(28px,4vw,44px);flex:1;
+}
+.lead-card__av{
+  width:72px;height:72px;border-radius:50%;
+  display:grid;place-items:center;
+  border:2px solid var(--line);
+  background:var(--ink);
+  font:800 1.5rem/1 var(--f-display);letter-spacing:-.02em;
+  color:var(--acid);
+  transition:border-color .35s,background .35s,box-shadow .35s;
+}
+.lead-card:hover .lead-card__av{
+  border-color:var(--acid);
+  background:rgba(200,255,46,.06);
+  box-shadow:0 0 24px rgba(200,255,46,.18);
+}
+.lead-card__name{
+  font:800 clamp(1.6rem,3.4vw,2.6rem)/1 var(--f-display);
+  letter-spacing:-.03em;margin:4px 0 0;
+}
+.lead-card__title{color:var(--mute);margin:0}
+.lead-card__cta{
+  display:inline-flex;align-items:center;gap:10px;
+  margin-top:auto;padding:14px 22px;
+  border:1px solid var(--line);border-radius:var(--r-pill);
+  color:var(--bone);text-decoration:none;
+  font:600 .8rem/1 var(--f-mono);letter-spacing:.06em;
+  align-self:flex-start;
+  transition:border-color .3s var(--ease-out),color .3s,background .3s,box-shadow .3s;
+}
+.lead-card__cta svg{width:18px;height:18px;flex:none;transition:transform .4s var(--ease-out),color .3s}
+.lead-card__cta:hover{
+  border-color:var(--acid);color:var(--acid);
+  background:rgba(200,255,46,.05);
+  box-shadow:0 0 16px rgba(200,255,46,.1);
+}
+.lead-card__cta:hover svg{transform:rotate(-12deg) scale(1.1);color:var(--acid)}
+@media(min-width:700px){
+  .org-leads__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}

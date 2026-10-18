@@ -377,6 +377,8 @@ app.get('/api/admin/export.csv', auth, h(async (req, res) => {
   res.send(lines.join('\n'));
 }));
  
+require('./admin')({ app, admin, CFG, rateLimit });   // admin panel API (/api/admin/*)
+
 /* ------------------------------------------------------------ static + 404 */
 app.use('/api', (req, res) => res.status(404).json({ error: 'NOT_FOUND', message: 'Not found.' }));
 app.use(express.static(path.join(__dirname, '..', 'public'), { extensions: ['html'] }));

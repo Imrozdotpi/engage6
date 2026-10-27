@@ -15,7 +15,9 @@ const CONFIG = {
   draft: false,                      // set to false when every value below is real (still open: registration open date, eligibility, refund policy, judging criteria, socials)
   eventName: 'Engage 6.0',
   tagline: 'Code with AI Hackathon',
-  startsAt: '2026-10-27T18:00:00+05:30',   // REGISTRATION DEADLINE: 27 Oct 2026, 6:00 PM IST. The countdown runs to this.
+  
+startsAt: '2026-10-27T22:00:00+05:30', // REGISTRATION DEADLINE: 27 Oct 2026, 10:00 PM IST.
+
   dateLabel: '28 Oct 2026',         // event day (MOU), shown in the hero meta row
   city: 'Gurugram',
   venue: 'The NorthCap University, Gurugram',
@@ -35,7 +37,9 @@ const CONFIG = {
   },
   timeline: [                        // `when` is shown on the page; `at` (ISO) lets the page pulse the next milestone
     { when: 'Until 27 Oct', at: null },                       // Registrations open (open date not confirmed)
-    { when: '27 Oct, 6:00 PM IST', at: '2026-10-27T18:00:00+05:30' },   // Registration closes
+    
+{ when: '27 Oct, 10:00 PM IST', at: '2026-10-27T22:00:00+05:30' },
+
     { when: '28 Oct 2026', at: null },                        // Hackathon kickoff (start time to be confirmed)
     { when: 'Four hours', at: null },                         // Build window
     { when: '28 Oct 2026', at: null },                        // Top 10 present
